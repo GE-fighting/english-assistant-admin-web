@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function Loading() {
   return (
     <div className="animate-pulse">
@@ -9,5 +7,5 @@ export default function Loading() {
         <div className="h-24 bg-gray-200 rounded"></div>
       </div>
     </div>
-  );
+  )
 } 

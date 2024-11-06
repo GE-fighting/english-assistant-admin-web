@@ -1,53 +1,56 @@
-export interface TextbookVersion {
+// 定义教材相关的所有类型
+
+export interface Version {
   id: number;
   name: string;
-  createdAt: Date;
+  created_at: number[];
 }
 
 export interface Grade {
   id: number;
   name: string;
-  createdAt: Date;
+  created_at: number[];
 }
 
 export interface Semester {
   id: number;
   name: string;
-  createdAt: Date;
+  created_at: number[];
 }
 
 export interface Textbook {
   id: number;
-  versionId: number;
-  gradeId: number;
-  semesterId: number;
-  createdAt: Date;
-  // Joined fields
-  version?: TextbookVersion;
-  grade?: Grade;
-  semester?: Semester;
+  name: string;
+  textbook_version: string;  
+  grade: string;    
+  semester: string; 
+  word_count: number;
+  unit_count: number;
+  created_at: string;
+}
+
+export interface ApiResponse<T> {
+  code: number;
+  message: string;
+  data: T;
+}
+
+export interface CreateTextbookParams {
+  version_id: number;
+  grade_id: number;
+  semester_id: number;
+  name: string;
 }
 
 export interface Unit {
   id: number;
   name: string;
-  textbookId: number;
-  sequenceNumber: number;
-  createdAt: Date;
+  textbook_id: number;
+  word_count: number;
+  order: number;
+  created_at: string;
 }
 
-export interface Word {
-  id: number;
-  word: string;
-  createdAt: Date;
+export interface TextbookDetail extends Textbook {
+  units: Unit[];
 }
-
-export interface WordUnitMapping {
-  id: number;
-  wordId: number;
-  unitId: number;
-  meaning: string;
-  createdAt: Date;
-  word?: Word;
-  unit?: Unit;
-} 

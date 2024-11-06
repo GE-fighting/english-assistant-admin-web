@@ -4,13 +4,20 @@ import TextbookCard from './TextbookCard';
 
 interface TextbookListProps {
   textbooks: Textbook[];
+  onTextbookClick: (textbookId: number) => void;
 }
 
-export default function TextbookList({ textbooks }: TextbookListProps): JSX.Element {
+export default function TextbookList({ textbooks, onTextbookClick }: TextbookListProps): JSX.Element {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       {textbooks.map((textbook) => (
-        <TextbookCard key={textbook.id} textbook={textbook} />
+        <div
+          key={textbook.id}
+          onClick={() => onTextbookClick(textbook.id)}
+          className="cursor-pointer hover:shadow-lg transition-shadow"
+        >
+          <TextbookCard textbook={textbook} />
+        </div>
       ))}
     </div>
   );

@@ -10,8 +10,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'English Learning Assistant',
-  description: 'English learning management system',
+  title: '英语学习助手',
+  description: '英语学习管理系统',
 }
 
 export default function RootLayout({
@@ -20,8 +20,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>{children}</body>
+    <html lang="zh-CN">
+      <body className={inter.className}>
+        {children}
+      </body>
     </html>
   )
-} 
+}

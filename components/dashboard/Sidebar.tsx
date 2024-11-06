@@ -1,43 +1,138 @@
 'use client';
 
-import { FC } from 'react';
+import { cn } from '@/lib/utils';
+import {
+  LayoutDashboard,
+  BookOpen,
+  Settings,
+  Book,
+  GraduationCap,
+  ChevronDown,
+  ChevronRight
+} from 'lucide-react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { Book, BookOpen, Settings, Home } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-export const Sidebar: FC = () => {
+const sidebarItems = [
+  {
+    title: '仪表盘',
+    href: '/dashboard',
+    icon: LayoutDashboard
+  },
+  {
+    title: '教材管理',
+    icon: BookOpen,
+    defaultHref: '/dashboard/textbooks/manage', // 默认跳转路径
+    items: [
+      {
+        title: '教材列表',
+        href: '/dashboard/textbooks/manage',
+        icon: Book
+      },
+      {
+        title: '教材单词',
+        href: '/dashboard/textbooks/words',
+        icon: GraduationCap
+      }
+    ]
+  },
+  {
+    title: '单词管理',
+    href: '/dashboard/words',
+    icon: Book
+  },
+  {
+    title: '系统设置',
+    href: '/dashboard/settings',
+    icon: Settings
+  }
+];
+
+export function Sidebar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [expandedItems, setExpandedItems] = useState<string[]>([]);
+
+  const toggleExpand = (title: string, defaultHref?: string) => {
+    if (defaultHref) {
+      router.push(defaultHref);
+    }
+    setExpandedItems(prev =>
+      prev.includes(title)
+        ? prev.filter(item => item !== title)
+        : [...prev, title]
+    );
+  };
+
+  const isExpanded = (title: string) => expandedItems.includes(title);
+
   return (
-    <aside className="w-64 bg-white border-r border-gray-100 p-4">
-      <div className="mb-8">
-        <h1 className="text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-          English Assistant
-        </h1>
+    <div className="w-64 bg-white border-r h-screen">
+      <div className="p-6">
+        <h1 className="text-xl font-bold">英语学习助手</h1>
       </div>
-      
-      <nav className="space-y-2">
-        <NavItem href="/dashboard" icon={<Home />} label="Dashboard" />
-        <NavItem href="/dashboard/textbooks" icon={<Book />} label="Textbooks" />
-        <NavItem href="/dashboard/words" icon={<BookOpen />} label="Words" />
-        <NavItem href="/dashboard/settings" icon={<Settings />} label="Settings" />
+      <nav className="px-4 space-y-2">
+        {sidebarItems.map((item, index) => (
+          <div key={index}>
+            {item.items ? (
+              <div className="space-y-2">
+                <button
+                  onClick={() => toggleExpand(item.title, item.defaultHref)}
+                  className={cn(
+                    "flex items-center justify-between w-full px-2 py-2 rounded-lg",
+                    pathname.startsWith('/dashboard/textbooks')
+                      ? "bg-blue-50 text-blue-600"
+                      : "text-gray-600 hover:bg-gray-50"
+                  )}
+                >
+                  <div className="flex items-center">
+                    <item.icon className="w-5 h-5 mr-3" />
+                    <span>{item.title}</span>
+                  </div>
+                  {isExpanded(item.title) ? (
+                    <ChevronDown className="w-4 h-4" />
+                  ) : (
+                    <ChevronRight className="w-4 h-4" />
+                  )}
+                </button>
+                {isExpanded(item.title) && (
+                  <div className="ml-4 space-y-1">
+                    {item.items.map((subItem, subIndex) => (
+                      <Link
+                        key={subIndex}
+                        href={subItem.href}
+                        className={cn(
+                          "flex items-center px-2 py-2 text-sm rounded-lg",
+                          pathname === subItem.href
+                            ? "bg-blue-50 text-blue-600"
+                            : "text-gray-600 hover:bg-gray-50"
+                        )}
+                      >
+                        <subItem.icon className="w-4 h-4 mr-3" />
+                        <span>{subItem.title}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                href={item.href}
+                className={cn(
+                  "flex items-center px-2 py-2 rounded-lg",
+                  pathname === item.href
+                    ? "bg-blue-50 text-blue-600"
+                    : "text-gray-600 hover:bg-gray-50"
+                )}
+              >
+                <item.icon className="w-5 h-5 mr-3" />
+                <span>{item.title}</span>
+              </Link>
+            )}
+          </div>
+        ))}
       </nav>
-    </aside>
+    </div>
   );
-};
-
-const NavItem: FC<{
-  href: string;
-  icon: React.ReactNode;
-  label: string;
-}> = ({ href, icon, label }) => {
-  return (
-    <Link href={href}>
-      <motion.div
-        whileHover={{ scale: 1.02 }}
-        className="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors"
-      >
-        <span className="text-gray-600">{icon}</span>
-        <span className="text-gray-700 font-medium">{label}</span>
-      </motion.div>
-    </Link>
-  );
-}; 
+} 

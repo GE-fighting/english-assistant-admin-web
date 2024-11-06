@@ -7,37 +7,37 @@ import { BarChart, Users, BookOpen, TrendingUp } from 'lucide-react';
 const DashboardPage: FC = () => {
   return (
     <div className="space-y-6">
-      {/* Stats Grid */}
+      {/* 统计数据网格 */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard 
-          title="Total Words"
+          title="单词总数"
           value="2,345"
           icon={<BookOpen className="w-6 h-6" />}
           trend="+12.5%"
         />
         <StatsCard 
-          title="Active Users"
+          title="活跃用户"
           value="1,234"
           icon={<Users className="w-6 h-6" />}
           trend="+5.2%"
         />
         <StatsCard 
-          title="Learning Hours"
+          title="学习时长"
           value="456"
           icon={<BarChart className="w-6 h-6" />}
           trend="+8.1%"
         />
         <StatsCard 
-          title="Completion Rate"
+          title="完成率"
           value="89%"
           icon={<TrendingUp className="w-6 h-6" />}
           trend="+3.2%"
         />
       </div>
 
-      {/* Recent Activity */}
+      {/* 最近活动 */}
       <div className="bg-white rounded-2xl p-6 shadow-sm">
-        <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
+        <h2 className="text-lg font-semibold mb-4">最近活动</h2>
         <div className="space-y-4">
           {[1, 2, 3].map((item) => (
             <motion.div
@@ -51,8 +51,8 @@ const DashboardPage: FC = () => {
                 <BookOpen className="w-5 h-5 text-blue-600" />
               </div>
               <div>
-                <h3 className="font-medium">New word list added</h3>
-                <p className="text-sm text-gray-500">2 hours ago</p>
+                <h3 className="font-medium">新增单词列表</h3>
+                <p className="text-sm text-gray-500">2小时前</p>
               </div>
             </motion.div>
           ))}
@@ -86,7 +86,7 @@ const StatsCard: FC<StatsCardProps> = ({ title, value, icon, trend }) => {
       </div>
       <div className="mt-4">
         <span className="text-green-500 text-sm font-medium">{trend}</span>
-        <span className="text-gray-500 text-sm ml-2">vs last month</span>
+        <span className="text-gray-500 text-sm ml-2">较上月</span>
       </div>
     </motion.div>
   );

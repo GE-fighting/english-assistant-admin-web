@@ -1,7 +1,11 @@
 export interface Word {
-  id: string;
+  id: number;
   word: string;
-  meaning: string;
+  phonetic: string;
+  translation: string;
+  unit_id: number;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface WordFormData {

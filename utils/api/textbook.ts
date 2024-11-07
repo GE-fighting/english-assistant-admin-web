@@ -67,4 +67,27 @@ export const TextbookAPI = {
 
     return response.json();
   },
+
+  async createUnit(data: Unit): Promise<ApiResponse<any>> {
+    const response = await fetch(`${API_CONFIG.baseURL}/api/unit/create`, {
+      method: 'POST',
+      headers: {
+        ...API_CONFIG.headers,
+      },
+      body: JSON.stringify(data)
+    });
+    return response.json();
+  },
+
+  async getUnitList(textbookId: number): Promise<ApiResponse<Unit[]>> {
+    const response = await fetch(`${API_CONFIG.baseURL}/api/unit/list`, {
+      method: 'POST',
+      headers: {
+        ...API_CONFIG.headers,
+      },
+      body: JSON.stringify({ "textbook_id": textbookId })
+    });
+    return response.json();
+  }
+
 }; 

@@ -46,9 +46,9 @@ export interface Unit {
   id: number;
   name: string;
   textbook_id: number;
-  word_count: number;
-  order: number;
+  sequence_number: number;
   created_at: string;
+  word_count: number;
 }
 
 export interface TextbookDetail extends Textbook {

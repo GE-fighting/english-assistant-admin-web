@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'next/navigation';
-import { BookOpen, FolderPlus, BookText } from 'lucide-react';
+import { useParams, useRouter } from 'next/navigation';
+import { BookOpen, FolderPlus, BookText, ArrowLeft } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { AddUnitModal } from '@/components/textbook/AddUnitModal';
@@ -10,6 +10,7 @@ import { TextbookAPI } from '@/utils/api/textbook';
 import { Unit } from '@/types/textbook';
 
 export default function TextbookDetailPage() {
+  const router = useRouter();
   const params = useParams();
   const textbookId = Number(params.id);
   const [isAddUnitModalOpen, setIsAddUnitModalOpen] = useState(false);
@@ -40,12 +41,24 @@ export default function TextbookDetailPage() {
     toast.success('单元添加成功');
   };
 
+  const handleGoBack = () => {
+    router.push('/dashboard/textbooks')//
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center space-x-4">
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={handleGoBack}
+              className="mr-2"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
             <BookOpen className="w-10 h-10 text-blue-600" />
             <div>
               <h1 className="text-3xl font-bold text-gray-800">教材详情</h1>

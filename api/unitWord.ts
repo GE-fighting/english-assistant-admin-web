@@ -1,5 +1,4 @@
 import { API_CONFIG } from './config';
-
 import { UnitWord } from '@/types/word';
 import { ApiResponse } from '@/types/response';
 
@@ -13,7 +12,7 @@ export const UnitWordAPI = {
     return response.json();
   },
 
-  async createWord(word:string, unit_id:number): Promise<ApiResponse<UnitWord>> {
+  async createWord(word: string, unit_id: number): Promise<ApiResponse<UnitWord>> {
     const response = await fetch(`${API_CONFIG.baseURL}/api/unit/createWord`, {
       method: 'POST',
       headers: API_CONFIG.headers,
@@ -30,4 +29,4 @@ export const UnitWordAPI = {
     });
     return response.json();
   }
-}
+};

@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { UnitWord, Word } from '@/types/word';
-import { UnitWordAPI } from '@/utils/api/unitWord';
+import { UnitWordAPI } from '@/api';
 export default function WordManagePage() {
   const router = useRouter();
   const params = useParams();

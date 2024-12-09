@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import { TextbookAPI } from '@/utils/api/textbook';
+import { TextbookAPI } from '@/api';
 import { toast } from 'sonner';
 
 interface Version {

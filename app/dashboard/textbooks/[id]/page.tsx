@@ -6,7 +6,7 @@ import { BookOpen, FolderPlus, BookText, ArrowLeft, Plus, List, Trash2, AlertTri
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { AddUnitModal } from '@/components/textbook/AddUnitModal';
-import { TextbookAPI } from '@/utils/api/textbook';
+import { TextbookAPI } from '@/api';
 import { Unit } from '@/types/textbook';
 import { 
   AlertDialog,

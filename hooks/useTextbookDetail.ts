@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TextbookAPI } from '@/utils/api/textbook';
+import { TextbookAPI } from '@/api';
 import { TextbookDetail } from '@/types/textbook';
 import { toast } from 'sonner';
 

@@ -9,6 +9,7 @@ import {
   TextbookDetail
 } from '@/types/textbook';
 import { ApiResponse } from '@/types/response';
+
 export const TextbookAPI = {
   async getVersions(): Promise<ApiResponse<Version[]>> {
     const response = await fetch(`${API_CONFIG.baseURL}/api/textbook-version/list`, {
@@ -34,47 +35,33 @@ export const TextbookAPI = {
   async createTextbook(data: CreateTextbookParams): Promise<ApiResponse<any>> {
     const response = await fetch(`${API_CONFIG.baseURL}/api/textbook/create`, {
       method: 'POST',
-      headers: {
-        ...API_CONFIG.headers,
-      },
-      body: JSON.stringify(data)
+      headers: API_CONFIG.headers,
+      body: JSON.stringify(data),
     });
     return response.json();
   },
 
   async getTextbookList(): Promise<ApiResponse<Textbook[]>> {
     const response = await fetch(`${API_CONFIG.baseURL}/api/textbook/list`, {
-      method: 'GET',
-      headers: {
-        ...API_CONFIG.headers,
-      },
+      headers: API_CONFIG.headers,
     });
     return response.json();
   },
 
   async getTextbookDetail(id: number): Promise<ApiResponse<TextbookDetail>> {
-    const response = await fetch(`${API_CONFIG.baseURL}/api/textbook/detail/${id}`, {
-      method: 'GET',
-      headers: {
-        ...API_CONFIG.headers,
-      },
+    const response = await fetch(`${API_CONFIG.baseURL}/api/textbook/detail`, {
+      method: 'POST',
+      headers: API_CONFIG.headers,
+      body: JSON.stringify({ id }),
     });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
     return response.json();
   },
 
-  //删除textbook
   async deleteTextbook(id: number): Promise<ApiResponse<any>> {
     const response = await fetch(`${API_CONFIG.baseURL}/api/textbook/delete`, {
       method: 'POST',
-      headers: {
-        ...API_CONFIG.headers,
-      },
-      body: JSON.stringify({ id })
+      headers: API_CONFIG.headers,
+      body: JSON.stringify({ id }),
     });
     return response.json();
   },
@@ -82,10 +69,8 @@ export const TextbookAPI = {
   async createUnit(data: Unit): Promise<ApiResponse<any>> {
     const response = await fetch(`${API_CONFIG.baseURL}/api/unit/create`, {
       method: 'POST',
-      headers: {
-        ...API_CONFIG.headers,
-      },
-      body: JSON.stringify(data)
+      headers: API_CONFIG.headers,
+      body: JSON.stringify(data),
     });
     return response.json();
   },
@@ -93,10 +78,8 @@ export const TextbookAPI = {
   async getUnitList(textbookId: number): Promise<ApiResponse<Unit[]>> {
     const response = await fetch(`${API_CONFIG.baseURL}/api/unit/list`, {
       method: 'POST',
-      headers: {
-        ...API_CONFIG.headers,
-      },
-      body: JSON.stringify({ "textbook_id": textbookId })
+      headers: API_CONFIG.headers,
+      body: JSON.stringify({ textbook_id: textbookId }),
     });
     return response.json();
   },
@@ -104,9 +87,9 @@ export const TextbookAPI = {
   async deleteUnit(id: number): Promise<ApiResponse<any>> {
     const response = await fetch(`${API_CONFIG.baseURL}/api/unit/delete`, {
       method: 'POST',
-      headers: { ...API_CONFIG.headers },
-      body: JSON.stringify({ "id": id })
+      headers: API_CONFIG.headers,
+      body: JSON.stringify({ id }),
     });
     return response.json();
-  } 
-}; 
+  },
+};

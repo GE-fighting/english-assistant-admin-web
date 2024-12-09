@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { createUnit } from '@/services/unitService';
 import { toast } from 'sonner';
-import { TextbookAPI } from '@/utils/api/textbook';
+import { TextbookAPI } from '@/api';
 
 interface AddUnitModalProps {
   isOpen: boolean;

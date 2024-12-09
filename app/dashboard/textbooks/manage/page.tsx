@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { TextbookAPI } from '@/utils/api/textbook';
+import { TextbookAPI } from '@/api';
 import { formatRFC3339Date, formatRelativeTime } from '@/utils/date';
 import { 
   Edit2, 

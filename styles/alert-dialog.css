@@ -1,0 +1,25 @@
+.custom-alert-overlay {
+  animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  background-color: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(4px);
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+}
+
+.custom-alert-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 50;
+}
+
+@keyframes overlayShow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+} 

@@ -1,6 +1,5 @@
 import { API_CONFIG } from './config';
-import { 
-  ApiResponse, 
+import {  
   Version, 
   Grade, 
   Semester, 
@@ -9,7 +8,7 @@ import {
   Unit,
   TextbookDetail
 } from '@/types/textbook';
-
+import { ApiResponse } from '@/types/response';
 export const TextbookAPI = {
   async getVersions(): Promise<ApiResponse<Version[]>> {
     const response = await fetch(`${API_CONFIG.baseURL}/api/textbook-version/list`, {
@@ -68,6 +67,18 @@ export const TextbookAPI = {
     return response.json();
   },
 
+  //删除textbook
+  async deleteTextbook(id: number): Promise<ApiResponse<any>> {
+    const response = await fetch(`${API_CONFIG.baseURL}/api/textbook/delete`, {
+      method: 'POST',
+      headers: {
+        ...API_CONFIG.headers,
+      },
+      body: JSON.stringify({ id })
+    });
+    return response.json();
+  },
+
   async createUnit(data: Unit): Promise<ApiResponse<any>> {
     const response = await fetch(`${API_CONFIG.baseURL}/api/unit/create`, {
       method: 'POST',
@@ -88,6 +99,14 @@ export const TextbookAPI = {
       body: JSON.stringify({ "textbook_id": textbookId })
     });
     return response.json();
-  }
+  },
 
+  async deleteUnit(id: number): Promise<ApiResponse<any>> {
+    const response = await fetch(`${API_CONFIG.baseURL}/api/unit/delete`, {
+      method: 'POST',
+      headers: { ...API_CONFIG.headers },
+      body: JSON.stringify({ "id": id })
+    });
+    return response.json();
+  } 
 }; 

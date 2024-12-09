@@ -38,8 +38,13 @@ const sidebarItems = [
     ]
   },
   {
-    title: '单词管理',
+    title: '词典管理',
     href: '/dashboard/words',
+    icon: Book
+  },
+  {
+    title: '试卷管理',
+    href: '/dashboard/papers',
     icon: Book
   },
   {
@@ -70,7 +75,7 @@ export function Sidebar() {
   return (
     <div className="w-64 bg-white border-r h-screen">
       <div className="p-6">
-        <h1 className="text-xl font-bold">英语学习助手</h1>
+        <h1 className="text-xl font-bold">英语教学助手</h1>
       </div>
       <nav className="px-4 space-y-2">
         {sidebarItems.map((item, index) => (

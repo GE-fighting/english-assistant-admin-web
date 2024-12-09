@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { Toaster } from 'sonner';
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -10,8 +11,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: '英语学习助手',
-  description: '英语学习管理系统',
+  title: '英语教学助手',
+  description: '英语教学管理系统',
 }
 
 export default function RootLayout({
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="zh-CN">
       <body className={inter.className}>
         {children}
+        <Toaster richColors position="top-center" />
       </body>
     </html>
   )

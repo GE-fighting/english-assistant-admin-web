@@ -20,22 +20,21 @@ import {
   DialogTrigger 
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { WordAPI } from '@/utils/api/word';
-import { Word } from '@/types/word';
-
+import { UnitWord, Word } from '@/types/word';
+import { UnitWordAPI } from '@/utils/api/unitWord';
 export default function WordManagePage() {
   const router = useRouter();
   const params = useParams();
   const unitId = Number(params.id);
-  const [words, setWords] = useState<Word[]>([]);
+  const [words, setWords] = useState<UnitWord[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(false);
-  const [currentWord, setCurrentWord] = useState<Partial<Word>>({});
+  const [currentWord, setCurrentWord] = useState<Partial<UnitWord>>({});
 
   const fetchWords = useCallback(async () => {
     try {
       setIsLoading(true);
-      const result = await WordAPI.getWordsByUnit(unitId);
+      const result = await UnitWordAPI.getWordsByUnit(unitId);
       if (result.code === 200) {
         setWords(result.data);
       }
@@ -51,37 +50,60 @@ export default function WordManagePage() {
   }, [fetchWords]);
 
   const handleAddWord = async () => {
+    if (!currentWord.word?.trim()) {
+      toast.error('请输入单词');
+      return;
+    }
+
+    const toastId = toast.loading('正在添加单词...');
+
     try {
-      const result = await WordAPI.createWord({
-        ...currentWord,
-        unit_id: unitId
-      });
+      const result = await UnitWordAPI.createWord(currentWord.word || '', unitId);
       if (result.code === 200) {
-        toast.success('单词添加成功');
+        toast.dismiss(toastId);
+        toast.success('单词添加成功！');
         fetchWords();
         setIsAddWordModalOpen(false);
         setCurrentWord({});
+      } else {
+        toast.dismiss(toastId);
+        toast.error('添加失败: ' + result.message);
       }
     } catch (error) {
-      toast.error('添加单词失败');
+      toast.dismiss(toastId);
+      toast.error('添加单词失败，请稍后重试');
     }
   };
 
   const handleDeleteWord = async (wordId: number) => {
+    const toastId = toast.loading('正在删除单词...');
+
     try {
-      const result = await WordAPI.deleteWord(wordId);
+      const result = await UnitWordAPI.deleteWord(wordId);
       if (result.code === 200) {
-        toast.success('单词删除成功');
+        toast.dismiss(toastId);
+        toast.success('单词已成功删除！');
         fetchWords();
+      } else {
+        toast.dismiss(toastId);
+        toast.error('删除失败: ' + result.message);
       }
     } catch (error) {
-      toast.error('删除单词失败');
+      toast.dismiss(toastId);
+      toast.error('删除单词失败，请稍后重试');
     }
   };
 
   const playPronunciation = (url: string) => {
+    if (!url) {
+      toast.error('暂无发音音频');
+      return;
+    }
+
     const audio = new Audio(url);
-    audio.play();
+    audio.play().catch(() => {
+      toast.error('播放发音失败，请稍后重试');
+    });
   };
 
   return (
@@ -115,28 +137,42 @@ export default function WordManagePage() {
                 <span>添加单词</span>
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="bg-white/95 backdrop-blur-sm border border-gray-100 shadow-xl">
               <DialogHeader>
-                <DialogTitle>添加新单词</DialogTitle>
+                <DialogTitle className="text-2xl font-bold text-gray-800 text-center">
+                  添加新单词
+                </DialogTitle>
               </DialogHeader>
-              <div className="space-y-4">
-                <Input 
-                  placeholder="单词" 
-                  value={currentWord.word || ''}
-                  onChange={(e) => setCurrentWord({
-                    ...currentWord, 
-                    word: e.target.value
-                  })}
-                />
-                <Input 
-                  placeholder="美式音标" 
-                  value={currentWord.phonetic_us || ''}
-                  onChange={(e) => setCurrentWord({
-                    ...currentWord, 
-                    phonetic_us: e.target.value
-                  })}
-                />
-                <Button onClick={handleAddWord}>确认添加</Button>
+              <div className="space-y-6 py-4">
+                <div className="space-y-2">
+                  <Input 
+                    placeholder="请输入单词..."
+                    value={currentWord.word || ''}
+                    onChange={(e) => setCurrentWord({
+                      ...currentWord, 
+                      word: e.target.value
+                    })}
+                    className="text-lg px-4 py-6 border-2 border-gray-200 focus:border-indigo-500 
+                               rounded-xl transition-all duration-200 placeholder:text-gray-400"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleAddWord();
+                      }
+                    }}
+                  />
+                  <p className="text-sm text-gray-500 pl-2">
+                    按回车键快速添加
+                  </p>
+                </div>
+                <Button 
+                  onClick={handleAddWord}
+                  className="w-full bg-gradient-to-r from-indigo-500 to-indigo-600 
+                           hover:from-indigo-600 hover:to-indigo-700 text-white py-6 
+                           rounded-xl text-lg font-medium transition-all duration-200
+                           shadow-md hover:shadow-lg"
+                >
+                  添加
+                </Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -150,7 +186,7 @@ export default function WordManagePage() {
           <div className="grid place-items-center h-64 bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="text-center">
               <BookText className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-              <p className="text-gray-500">暂无单词，点击添加单词</p>
+              <p className="text-gray-500">暂无单词，点击“添加单词”按钮添加单词</p>
             </div>
           </div>
         ) : (
@@ -170,8 +206,17 @@ export default function WordManagePage() {
                       variant="ghost" 
                       size="icon"
                       onClick={() => playPronunciation(word.pronunciation_us)}
+                      title="美式发音"
                     >
                       <Volume2 className="w-5 h-5 text-indigo-400" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="icon"
+                      onClick={() => playPronunciation(word.pronunciation_uk)}
+                      title="英式发音"
+                    >
+                      <Volume2 className="w-5 h-5 text-blue-400" />
                     </Button>
                     <Button 
                       variant="ghost" 
@@ -185,20 +230,36 @@ export default function WordManagePage() {
                     <Button 
                       variant="ghost" 
                       size="icon"
-                      onClick={() => handleDeleteWord(word.word_id)}
+                      onClick={() => handleDeleteWord(word.id)}
                     >
                       <Trash2 className="w-5 h-5 text-red-400" />
                     </Button>
                   </div>
                 </div>
                 <div className="text-sm text-gray-600 space-y-2">
-                  <div className="flex justify-between">
-                    <span>美式音标</span>
-                    <span className="font-medium">{word.phonetic_us}</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500">美式音标</span>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium text-indigo-600">{word.phonetic_us}</span>
+                      <Volume2 
+                        className="w-4 h-4 text-indigo-400 cursor-pointer" 
+                        onClick={() => playPronunciation(word.pronunciation_us)}
+                      />
+                    </div>
                   </div>
-                  <div className="flex justify-between">
-                    <span>添加时间</span>
-                    <span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-500">英式音标</span>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-medium text-blue-600">{word.phonetic_uk}</span>
+                      <Volume2 
+                        className="w-4 h-4 text-blue-400 cursor-pointer" 
+                        onClick={() => playPronunciation(word.pronunciation_uk)}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex justify-between items-center pt-2 border-t border-gray-100">
+                    <span className="text-gray-500">添加时间</span>
+                    <span className="text-gray-600">
                       {new Date(word.created_at).toLocaleDateString()}
                     </span>
                   </div>

@@ -2,12 +2,22 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { BookOpen, FolderPlus, BookText, ArrowLeft } from 'lucide-react';
+import { BookOpen, FolderPlus, BookText, ArrowLeft, Plus, List, Trash2, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { AddUnitModal } from '@/components/textbook/AddUnitModal';
 import { TextbookAPI } from '@/utils/api/textbook';
 import { Unit } from '@/types/textbook';
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function TextbookDetailPage() {
   const router = useRouter();
@@ -16,6 +26,7 @@ export default function TextbookDetailPage() {
   const [isAddUnitModalOpen, setIsAddUnitModalOpen] = useState(false);
   const [units, setUnits] = useState<Unit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [unitToDelete, setUnitToDelete] = useState<number | null>(null);
 
   const fetchUnits = useCallback(async () => {
     try {
@@ -43,6 +54,22 @@ export default function TextbookDetailPage() {
 
   const handleGoBack = () => {
     router.push('/dashboard/textbooks')//
+  };
+
+  const handleUnitClick = (unitId: number) => {
+    router.push(`/dashboard/textbooks/${unitId}/words`);
+  };
+
+  const handleDeleteUnit = async (unitId: number) => {
+    try {
+      const result = await TextbookAPI.deleteUnit(unitId);
+      if (result.code === 200) {
+        toast.success('单元删除成功');
+        fetchUnits();
+      }
+    } catch (error) {
+      toast.error('删除单元失败');
+    }
   };
 
   return (
@@ -94,7 +121,7 @@ export default function TextbookDetailPage() {
               <div 
                 key={unit.id} 
                 className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all 
-                           border border-gray-100 p-6 space-y-4 group cursor-pointer"
+                           border border-gray-100 p-6 space-y-4 group relative"
               >
                 <div className="flex justify-between items-center">
                   <h2 className="text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors">
@@ -111,6 +138,45 @@ export default function TextbookDetailPage() {
                   </div>
                   <span>{new Date(unit.created_at).toLocaleDateString()}</span>
                 </div>
+
+                {/* New Action Buttons */}
+                <div className="flex justify-center gap-3 pt-4 border-t border-gray-100">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex-1 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                    onClick={() => handleUnitClick(unit.id)}
+                  >
+                    <List className="w-4 h-4 mr-2" />
+                    单词列表
+                  </Button>
+                  
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex-1 hover:bg-green-50 hover:text-green-600 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      router.push(`/dashboard/textbooks/${unit.id}/words/add`);
+                    }}
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    添加单词
+                  </Button>
+                  
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="flex-1 hover:bg-red-50 hover:text-red-600 transition-colors"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setUnitToDelete(unit.id);
+                    }}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    删除单元
+                  </Button>
+                </div>
               </div>
             ))}
           </div>
@@ -122,6 +188,45 @@ export default function TextbookDetailPage() {
           textbookId={textbookId}
           onSuccess={handleUnitAddSuccess}
         />
+
+        {/* Simplified Delete Confirmation Dialog */}
+        <AlertDialog open={!!unitToDelete} onOpenChange={() => setUnitToDelete(null)}>
+          <AlertDialogContent className="max-w-[400px]">
+            <AlertDialogHeader>
+              <div className="flex items-center gap-2">
+                <AlertTriangle className="w-5 h-5 text-red-500" />
+                <AlertDialogTitle>删除单元</AlertDialogTitle>
+              </div>
+              <div className="mt-2 p-3 bg-gray-50 rounded-lg text-sm">
+                <span className="font-medium text-gray-900">
+                  {units.find(u => u.id === unitToDelete)?.name}
+                </span>
+                <span className="text-gray-500 ml-2">
+                  ({units.find(u => u.id === unitToDelete)?.word_count} 个单词)
+                </span>
+              </div>
+              <AlertDialogDescription className="mt-3 text-gray-600">
+                删除后将无法恢复单元内的所有数据，是否确认删除？
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter className="mt-4">
+              <AlertDialogCancel className="hover:bg-gray-100">
+                取消
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-red-500 hover:bg-red-600 text-white"
+                onClick={() => {
+                  if (unitToDelete) {
+                    handleDeleteUnit(unitToDelete);
+                    setUnitToDelete(null);
+                  }
+                }}
+              >
+                删除
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

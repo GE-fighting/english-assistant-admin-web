@@ -22,11 +22,22 @@ import { motion } from 'framer-motion';
 import { Textbook } from '@/types/textbook';
 import { toast } from 'sonner';
 import { AddTextbookModal } from '@/components/textbook/AddTextbookModal';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 export default function TextbookManagePage() {
   const router = useRouter();
   const [textbooks, setTextbooks] = useState<Textbook[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [textbookToDelete, setTextbookToDelete] = useState<number | null>(null);
 
   const fetchTextbooks = async () => {
     try {
@@ -51,6 +62,25 @@ export default function TextbookManagePage() {
 
   const handleAddTextbookSuccess = () => {
     fetchTextbooks();
+  };
+
+  const handleDeleteTextbook = async (textbookId: number) => {
+    const toastId = toast.loading('正在删除教材...');
+    
+    try {
+      const result = await TextbookAPI.deleteTextbook(textbookId);
+      if (result.code === 200) {
+        toast.dismiss(toastId);
+        toast.success('教材删除成功！');
+        fetchTextbooks(); // 刷新列表
+      } else {
+        toast.dismiss(toastId);
+        toast.error('删除失败: ' + result.message);
+      }
+    } catch (error) {
+      toast.dismiss(toastId);
+      toast.error('删除教材失败，请稍后重试');
+    }
   };
 
   return (
@@ -138,6 +168,10 @@ export default function TextbookManagePage() {
                       whileHover={{ scale: 1.1 }}
                       whileTap={{ scale: 0.9 }}
                       className="text-red-500 hover:text-red-600 transition-colors"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setTextbookToDelete(textbook.id);
+                      }}
                     >
                       <Trash2 className="w-4 h-4" />
                     </motion.button>
@@ -154,6 +188,41 @@ export default function TextbookManagePage() {
         onClose={() => setIsModalOpen(false)}
         onSuccess={handleAddTextbookSuccess}
       />
+
+      <AlertDialog 
+        open={textbookToDelete !== null} 
+        onOpenChange={() => setTextbookToDelete(null)}
+      >
+        <AlertDialogContent className="bg-white/95 backdrop-blur-sm border border-gray-100">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-semibold text-gray-800">
+              确认删除教材？
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-gray-600">
+              此操作将删除该教材及其所有单元和单词数据。此操作不可恢复，请谨慎操作。
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="space-x-3">
+            <AlertDialogCancel 
+              className="bg-gray-100 hover:bg-gray-200 text-gray-700"
+              onClick={() => setTextbookToDelete(null)}
+            >
+              取消
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-500 hover:bg-red-600 text-white"
+              onClick={() => {
+                if (textbookToDelete) {
+                  handleDeleteTextbook(textbookToDelete);
+                  setTextbookToDelete(null);
+                }
+              }}
+            >
+              确认删除
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 } 

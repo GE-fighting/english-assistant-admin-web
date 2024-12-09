@@ -3,12 +3,17 @@ export interface Word {
   word: string;
   phonetic_us: string;
   phonetic_uk: string;
-  translation: string;
+  meaning: string;
   pronunciation_us: string;
   pronunciation_uk: string;
-  unit_id: number;
   created_at: string;
   updated_at: string;
+  example: string;
+}
+
+export interface UnitWord extends Word {
+  id: number;
+  unit_id: number;
 }
 
 export interface WordFormData {

@@ -40,7 +40,6 @@ export function AddUnitModal({ isOpen, onClose, textbookId, onSuccess }: AddUnit
         onSuccess();
         setName('');
         setSequenceNumber('');
-        toast.success('单元添加成功');
       } else {
         toast.error(result.message || '添加单元失败，请重试');
       }

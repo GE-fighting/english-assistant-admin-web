@@ -31,8 +31,8 @@ const sidebarItems = [
         icon: Book
       },
       {
-        title: '教材单词',
-        href: '/dashboard/textbooks/words',
+        title: '教材版本',
+        href: '/dashboard/textbooks/versions',
         icon: GraduationCap
       }
     ]

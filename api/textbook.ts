@@ -18,6 +18,33 @@ export const TextbookAPI = {
     return response.json();
   },
 
+  async addVersion(name: string): Promise<ApiResponse<any>> {
+    const response = await fetch(`${API_CONFIG.baseURL}/api/textbook-version/create`, {
+      method: 'POST',
+      headers: API_CONFIG.headers,
+      body: JSON.stringify({name}),
+    });
+    return response.json();
+  },
+
+  async deleteVersion(id: number): Promise<ApiResponse<any>> {
+    const response = await fetch(`${API_CONFIG.baseURL}/api/textbook-version/delete`, {
+      method: 'POST',
+      headers: API_CONFIG.headers,
+      body: JSON.stringify({ id }),
+    });
+    return response.json();
+  },
+
+  async updateVersion(id: number, name: string): Promise<ApiResponse<any>> {
+    const response = await fetch(`${API_CONFIG.baseURL}/api/textbook-version/update`, {
+      method: 'POST',
+      headers: API_CONFIG.headers,
+      body: JSON.stringify({ id, name }),
+    });
+    return response.json();
+  },
+
   async getGrades(): Promise<ApiResponse<Grade[]>> {
     const response = await fetch(`${API_CONFIG.baseURL}/api/grade/list`, {
       headers: API_CONFIG.headers,

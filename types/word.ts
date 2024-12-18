@@ -1,5 +1,5 @@
 export interface Word {
-  word_id: number;
+  word_id: string;
   word: string;
   phonetic_us: string;
   phonetic_uk: string;
@@ -19,4 +19,9 @@ export interface UnitWord extends Word {
 export interface WordFormData {
   word: string;
   meaning: string;
+  phonetic_us: string;
+  phonetic_uk: string;
+  pronunciation_us: string;
+  pronunciation_uk: string;
+  example: string;
 } 

@@ -24,7 +24,7 @@ export const getColumns = (
     render: (_: unknown, record: Word) => (
       <Space size="middle">
         <Button type="link" onClick={() => handleEdit(record)}>编辑</Button>
-        <Button type="link" danger onClick={() => handleDelete(record.id)}>删除</Button>
+        <Button type="link" danger onClick={() => handleDelete(record.word_id)}>删除</Button>
       </Space>
     ),
   },

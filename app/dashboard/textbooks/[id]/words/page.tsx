@@ -20,7 +20,7 @@ import {
   DialogTrigger 
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { UnitWord, Word } from '@/types/word';
+import { UnitWord } from '@/types/word';
 import { UnitWordAPI } from '@/api';
 export default function WordManagePage() {
   const router = useRouter();
@@ -38,7 +38,7 @@ export default function WordManagePage() {
       if (result.code === 200) {
         setWords(result.data);
       }
-    } catch (error) {
+    } catch {
       toast.error('获取单词列表失败');
     } finally {
       setIsLoading(false);
@@ -69,7 +69,7 @@ export default function WordManagePage() {
         toast.dismiss(toastId);
         toast.error('添加失败: ' + result.message);
       }
-    } catch (error) {
+    } catch {
       toast.dismiss(toastId);
       toast.error('添加单词失败，请稍后重试');
     }
@@ -88,7 +88,7 @@ export default function WordManagePage() {
         toast.dismiss(toastId);
         toast.error('删除失败: ' + result.message);
       }
-    } catch (error) {
+    } catch {
       toast.dismiss(toastId);
       toast.error('删除单词失败，请稍后重试');
     }

@@ -19,7 +19,7 @@ interface AddWordModalProps {
   onSuccess: () => void;
 }
 
-export function AddWordModal({ isOpen, onClose, textbookId, onSuccess }: AddWordModalProps) {
+export function AddWordModal({ isOpen, onClose, onSuccess }: AddWordModalProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     word: '',
@@ -38,7 +38,7 @@ export function AddWordModal({ isOpen, onClose, textbookId, onSuccess }: AddWord
       toast.success('添加单词成功');
       onSuccess();
       onClose();
-    } catch (error) {
+    } catch  {
       toast.error('添加单词失败');
     } finally {
       setLoading(false);

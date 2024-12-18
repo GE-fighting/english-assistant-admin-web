@@ -22,7 +22,7 @@ export default function TextbookVersionPage() {
       } else {
         message.error('获取版本列表失败');
       }
-    } catch (error) {
+    } catch {
       message.error('获取版本列表失败');
     } finally {
       setLoading(false);
@@ -54,7 +54,7 @@ export default function TextbookVersionPage() {
       } else {
         message.error('删除失败');
       }
-    } catch (error) {
+    } catch {
       message.error('删除失败');
     }
   };
@@ -79,7 +79,7 @@ export default function TextbookVersionPage() {
       }
       setModalVisible(false);
       fetchVersions();
-    } catch (error) {
+    } catch {
       message.error('操作失败');
     }
   };
@@ -102,7 +102,7 @@ export default function TextbookVersionPage() {
       title: '操作',
       key: 'action',
       width: 200,
-      render: (_: any, record: Version) => (
+      render: (_: undefined, record: Version) => (
         <div className="space-x-3">
           <Button
             type="link"

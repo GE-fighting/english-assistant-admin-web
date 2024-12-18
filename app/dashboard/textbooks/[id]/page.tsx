@@ -22,8 +22,7 @@ import {
   Dialog, 
   DialogContent, 
   DialogHeader, 
-  DialogTitle, 
-  DialogTrigger 
+  DialogTitle
 } from "@/components/ui/dialog";
 import { Input } from '@/components/ui/input';
 import { UnitWordAPI } from '@/api';
@@ -47,7 +46,7 @@ export default function TextbookDetailPage() {
       if (result.code === 200) {
         setUnits(result.data);
       }
-    } catch (error) {
+    } catch {
       toast.error('获取单元列表失败');
     } finally {
       setIsLoading(false);
@@ -79,7 +78,7 @@ export default function TextbookDetailPage() {
         toast.success('单元删除成功');
         fetchUnits();
       }
-    } catch (error) {
+    } catch {
       toast.error('删除单元失败');
     }
   };
@@ -104,7 +103,7 @@ export default function TextbookDetailPage() {
         toast.dismiss(toastId);
         toast.error('添加失败: ' + result.message);
       }
-    } catch (error) {
+    } catch {
       toast.dismiss(toastId);
       toast.error('添加单词失败，请稍后重试');
     }

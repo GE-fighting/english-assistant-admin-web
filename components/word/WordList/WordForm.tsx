@@ -1,10 +1,9 @@
 'use client';
 import React from 'react';
-import { Form, Input } from 'antd';
-import type { WordFormData } from '@/types/word';
+import { Form, Input, FormInstance } from 'antd';
 
 interface WordFormProps {
-  form: any; // 使用具体的Form类型
+  form: FormInstance;
 }
 
 /**

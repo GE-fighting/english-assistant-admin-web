@@ -24,11 +24,21 @@ export function WordList() {
     try {
       // TODO: 替换为实际API调用
       const mockData = [
-        { id: '1', word: 'hello', meaning: '你好' },
-        { id: '2', word: 'world', meaning: '世界' },
+        {
+          word_id: '1',
+          word: 'hello',
+          meaning: '你好',
+          phonetic_us: 'həˈloʊ',
+          phonetic_uk: 'həˈləʊ',
+          pronunciation_us: 'url_to_us_audio',
+          pronunciation_uk: 'url_to_uk_audio',
+          example: 'Hello, world!',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
       ];
       setWords(mockData);
-    } catch (error) {
+    } catch {
       message.error('加载数据失败');
     } finally {
       setLoading(false);
@@ -41,35 +51,37 @@ export function WordList() {
     setIsModalVisible(true);
   };
 
-  const handleDelete = async (id: string) => {
-    try {
-      // TODO: 调用API删除单词
-      setWords(words.filter(word => word.id !== id));
-      message.success('删除成功');
-    } catch (error) {
-      message.error('删除失败');
-    }
-  };
+// 修改 handleDelete 函数的参数类型
+const handleDelete = async (id: string) => {
+  try {
+    setWords(words.filter(word => word.word_id !== id));
+    message.success('删除成功');
+  } catch {
+    message.error('删除失败');
+  }
+};
 
   const handleModalOk = async () => {
     try {
       const values = await form.validateFields();
       if (editingWord) {
         const updatedWords = words.map(word =>
-          word.id === editingWord.id ? { ...word, ...values } : word
+          word.word_id === editingWord.word_id ? { ...word, ...values } : word
         );
         setWords(updatedWords);
         message.success('更新成功');
       } else {
         const newWord: Word = {
-          id: Date.now().toString(),
-          ...values
+          word_id: Date.now().toString(),
+          ...values,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         };
         setWords([...words, newWord]);
         message.success('添加成功');
       }
       handleModalCancel();
-    } catch (error) {
+    } catch {
       message.error('操作失败');
     }
   };

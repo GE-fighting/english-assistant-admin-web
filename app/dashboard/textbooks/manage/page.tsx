@@ -47,7 +47,7 @@ export default function TextbookManagePage() {
       } else {
         toast.error(response.message || '获取教材列表失败');
       }
-    } catch (error) {
+    } catch {
       toast.error('获取教材列表失败');
     }
   };
@@ -77,7 +77,7 @@ export default function TextbookManagePage() {
         toast.dismiss(toastId);
         toast.error('删除失败: ' + result.message);
       }
-    } catch (error) {
+    } catch {
       toast.dismiss(toastId);
       toast.error('删除教材失败，请稍后重试');
     }

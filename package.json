@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev --port 3001",
     "build": "next build",
-    "start": "next start",
+    "start": "next start --port 3001",
     "lint": "next lint",
-        "start-pm2": "pm2 start npm --name english-assistant-admin-web -- start"
+    "start-pm2": "pm2 start npm --name english-assistant-admin-web -- start"
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.0",
@@ -22,6 +22,7 @@
     "framer-motion": "^11.11.11",
     "lucide-react": "^0.454.0",
     "next": "^13.5.6",
+    "pm2": "^5.4.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sonner": "^1.7.0",
@@ -32,10 +33,10 @@
     "@types/react": "^18.2.57",
     "@types/react-dom": "^18.2.19",
     "autoprefixer": "^10.4.20",
+    "eslint": "^8",
+    "eslint-config-next": "15.0.1",
     "postcss": "^8.4.47",
     "tailwindcss": "^3.4.14",
-    "typescript": "^5.3.3",
-    "eslint": "^8",
-    "eslint-config-next": "15.0.1"
+    "typescript": "^5.3.3"
   }
 }

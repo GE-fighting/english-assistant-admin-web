@@ -111,7 +111,7 @@ export function AddWordModal({ unitId, trigger, onSuccess }: AddWordModalProps) 
             failedCount++;
             failedWords.set(word, response.message || '添加失败');
           }
-        } catch (error) {
+        } catch {
           failedCount++;
           failedWords.set(word, '网络错误，请检查网络连接');
         }
@@ -130,7 +130,7 @@ export function AddWordModal({ unitId, trigger, onSuccess }: AddWordModalProps) 
       } else {
         toast.error(`添加完成，${successCount} 个成功，${failedCount} 个失败`);
       }
-    } catch (error) {
+    } catch {
       toast.error('批量添加过程中发生错误');
     } finally {
       setBatchWords('');
@@ -152,15 +152,6 @@ export function AddWordModal({ unitId, trigger, onSuccess }: AddWordModalProps) 
       <span>添加单词</span>
     </Button>
   );
-
-  const handleClose = () => {
-    if (!loading) {
-      setIsOpen(false);
-      setWord('');
-      setBatchWords('');
-      setBatchProgress(null);
-    }
-  };
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

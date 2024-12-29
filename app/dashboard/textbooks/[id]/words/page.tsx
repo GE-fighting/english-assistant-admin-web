@@ -279,7 +279,7 @@ export default function WordManagePage() {
           <div className="grid place-items-center h-64 bg-white rounded-xl shadow-sm border border-gray-100">
             <div className="text-center">
               <BookText className="w-16 h-16 mx-auto text-gray-300 mb-4" />
-              <p className="text-gray-500">暂无单词，点击"添加单词"按钮添加单词</p>
+              <p className="text-gray-500">暂无单词，点击&quot;添加单词&quot;按钮添加单词</p>
             </div>
           </div>
         ) : viewMode === 'card' ? (

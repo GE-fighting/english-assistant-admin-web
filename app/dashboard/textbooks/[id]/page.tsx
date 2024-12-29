@@ -28,7 +28,6 @@ export default function TextbookDetailPage() {
   const [units, setUnits] = useState<Unit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [unitToDelete, setUnitToDelete] = useState<number | null>(null);
-  const [selectedUnitId, setSelectedUnitId] = useState<number | null>(null);
 
   const fetchUnits = useCallback(async () => {
     try {

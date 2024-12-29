@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { AddUnitModal } from '@/components/textbook/AddUnitModal';
 import { TextbookAPI } from '@/api';
 import { Unit } from '@/types/textbook';
+import { AddWordModal } from '@/components/textbook/AddWordModal';
 import { 
   AlertDialog,
   AlertDialogAction,
@@ -18,14 +19,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle
-} from "@/components/ui/dialog";
-import { Input } from '@/components/ui/input';
-import { UnitWordAPI } from '@/api';
 
 export default function TextbookDetailPage() {
   const router = useRouter();
@@ -35,8 +28,6 @@ export default function TextbookDetailPage() {
   const [units, setUnits] = useState<Unit[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [unitToDelete, setUnitToDelete] = useState<number | null>(null);
-  const [isAddWordModalOpen, setIsAddWordModalOpen] = useState(false);
-  const [currentWord, setCurrentWord] = useState<{ word?: string }>({});
   const [selectedUnitId, setSelectedUnitId] = useState<number | null>(null);
 
   const fetchUnits = useCallback(async () => {
@@ -80,32 +71,6 @@ export default function TextbookDetailPage() {
       }
     } catch {
       toast.error('删除单元失败');
-    }
-  };
-
-  const handleAddWord = async () => {
-    if (!currentWord.word?.trim()) {
-      toast.error('请输入单词');
-      return;
-    }
-
-    const toastId = toast.loading('正在添加单词...');
-
-    try {
-      const result = await UnitWordAPI.createWord(currentWord.word || '', selectedUnitId || 0);
-      if (result.code === 200) {
-        toast.dismiss(toastId);
-        toast.success('单词添加成功！');
-        fetchUnits();
-        setIsAddWordModalOpen(false);
-        setCurrentWord({});
-      } else {
-        toast.dismiss(toastId);
-        toast.error('添加失败: ' + result.message);
-      }
-    } catch {
-      toast.dismiss(toastId);
-      toast.error('添加单词失败，请稍后重试');
     }
   };
 
@@ -188,19 +153,21 @@ export default function TextbookDetailPage() {
                     单词列表
                   </Button>
                   
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="flex-1 hover:bg-green-50 hover:text-green-600 transition-colors"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setIsAddWordModalOpen(true);
-                      setSelectedUnitId(unit.id);
-                    }}
-                  >
-                    <Plus className="w-4 h-4 mr-2" />
-                    添加单词
-                  </Button>
+                  <AddWordModal 
+                    unitId={unit.id}
+                    onSuccess={fetchUnits}
+                    trigger={
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="flex-1 hover:bg-green-50 hover:text-green-600 transition-colors"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        添加单词
+                      </Button>
+                    }
+                  />
                   
                   <Button
                     variant="ghost"
@@ -265,50 +232,6 @@ export default function TextbookDetailPage() {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-
-        <Dialog 
-          open={isAddWordModalOpen} 
-          onOpenChange={setIsAddWordModalOpen}
-        >
-          <DialogContent className="bg-white/95 backdrop-blur-sm border border-gray-100 shadow-xl">
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-gray-800 text-center">
-                添加新单词
-              </DialogTitle>
-            </DialogHeader>
-            <div className="space-y-6 py-4">
-              <div className="space-y-2">
-                <Input 
-                  placeholder="请输入单词..."
-                  value={currentWord.word || ''}
-                  onChange={(e) => setCurrentWord({
-                    ...currentWord, 
-                    word: e.target.value
-                  })}
-                  className="text-lg px-4 py-6 border-2 border-gray-200 focus:border-indigo-500 
-                             rounded-xl transition-all duration-200 placeholder:text-gray-400"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      handleAddWord();
-                    }
-                  }}
-                />
-                <p className="text-sm text-gray-500 pl-2">
-                  按回车键快速添加
-                </p>
-              </div>
-              <Button 
-                onClick={handleAddWord}
-                className="w-full bg-gradient-to-r from-indigo-500 to-indigo-600 
-                         hover:from-indigo-600 hover:to-indigo-700 text-white py-6 
-                         rounded-xl text-lg font-medium transition-all duration-200
-                         shadow-md hover:shadow-lg"
-              >
-                添加
-              </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );

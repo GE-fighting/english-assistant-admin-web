@@ -40,7 +40,7 @@ export interface CreateTextbookParams {
 }
 
 export interface Unit {
-  id: number;
+  id?: number;
   name: string;
   textbook_id: number;
   sequence_number: number;

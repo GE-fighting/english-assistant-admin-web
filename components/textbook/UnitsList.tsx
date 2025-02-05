@@ -42,7 +42,11 @@ export const UnitsList = ({ units, onAddUnit, onViewWords }: UnitsListProps) => 
             </div>
             <button 
               className="text-blue-500 hover:text-blue-600"
-              onClick={() => onViewWords?.(unit.id)}
+              onClick={() => {
+                if (typeof unit.id === 'number' && onViewWords) {
+                  onViewWords(unit.id);
+                }
+              }}
             >
               查看单词
             </button>

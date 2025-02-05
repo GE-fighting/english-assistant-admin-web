@@ -146,14 +146,18 @@ export default function TextbookDetailPage() {
                     variant="ghost"
                     size="sm"
                     className="flex-1 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                    onClick={() => handleUnitClick(unit.id)}
+                    onClick={() => {
+                      if (typeof unit.id === 'number') {
+                        handleUnitClick(unit.id);
+                      }
+                    }}
                   >
                     <List className="w-4 h-4 mr-2" />
                     单词列表
                   </Button>
                   
                   <AddWordModal 
-                    unitId={unit.id}
+                    unitId={unit.id!}
                     onSuccess={fetchUnits}
                     trigger={
                       <Button
@@ -174,7 +178,9 @@ export default function TextbookDetailPage() {
                     className="flex-1 hover:bg-red-50 hover:text-red-600 transition-colors"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setUnitToDelete(unit.id);
+                      if (typeof unit.id === 'number') {
+                        setUnitToDelete(unit.id);
+                      }
                     }}
                   >
                     <Trash2 className="w-4 h-4 mr-2" />

@@ -25,7 +25,6 @@ export function AddUnitModal({ isOpen, onClose, textbookId, onSuccess }: AddUnit
     setIsLoading(true);
     try {
       const result = await TextbookAPI.createUnit({
-        id: 0, // 新建单元时通常传0或null
         name,
         textbook_id: textbookId,
         sequence_number: Number(sequenceNumber),

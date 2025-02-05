@@ -4,7 +4,7 @@ import { ApiResponse } from '@/types/response';
 
 export const UnitWordAPI = {
   async getWordsByUnit(unitId: number): Promise<ApiResponse<UnitWord[]>> {
-    const response = await fetch(`${API_CONFIG.baseURL}/api/unit/words`, {
+    const response = await fetch(`${API_CONFIG.baseURL}/api/unit-word/words`, {
       method: 'POST',
       headers: API_CONFIG.headers,
       body: JSON.stringify({ unit_id: unitId })
@@ -13,7 +13,7 @@ export const UnitWordAPI = {
   },
 
   async createWord(word: string, unit_id: number): Promise<ApiResponse<UnitWord>> {
-    const response = await fetch(`${API_CONFIG.baseURL}/api/unit/createWord`, {
+    const response = await fetch(`${API_CONFIG.baseURL}/api/unit-word/create`, {
       method: 'POST',
       headers: API_CONFIG.headers,
       body: JSON.stringify({ word, unit_id })
@@ -22,7 +22,7 @@ export const UnitWordAPI = {
   },
 
   async deleteWord(id: number): Promise<ApiResponse<any>> {
-    const response = await fetch(`${API_CONFIG.baseURL}/api/unit/deleteWord`, {
+    const response = await fetch(`${API_CONFIG.baseURL}/api/unit-word/delete`, {
       method: 'POST',
       headers: API_CONFIG.headers,
       body: JSON.stringify({ id })
